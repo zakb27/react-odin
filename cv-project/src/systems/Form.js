@@ -8,12 +8,6 @@ const Form = ()=>{
 
     const handleChangePersonal = (e) => {
         const { name, value, type } = e.target
-
-        if (type === 'file') {
-            handleChangeFile(e)
-            return
-        }
-
         setCv((prevState) => ({
             ...prevState,
             personalInfo: {
@@ -22,29 +16,59 @@ const Form = ()=>{
             },
         }))
     }
-    const handleChangeFile = (e) => {
-        const { name } = e.target
-        const file = e.target.files[0]
-        if (!file) return
 
-        const reader = new FileReader()
-        reader.onload = () => {
-            setCv((prevState) => ({
-                ...prevState,
-                personalInfo: {
-                    ...prevState.personalInfo,
-                    [name]: reader.result,
+    const handleChangeEducation = (e, id) =>{
+        const {name,value} = e.target;
+        setCv(prevState => {
+            const newEducation = prevState.education.map((item) => {
+                if(item.id===id){
+                    return { ...item, [name]: value }
+                }
+                return item
+            })
+            return { ...prevState, education: [...newEducation] }
+
+        })
+    }
+
+    const handleAddEducation = () => {
+        setCv((prevState) => ({
+            ...prevState,
+            education: [
+                ...prevState.education,
+                {
+                    id: uuidv4(),
+                    universityName: '',
+                    city: '',
+                    degree: '',
+                    subject: '',
+                    from: '',
+                    to: '',
                 },
-            }))
-        }
-        reader.readAsDataURL(file)
+            ],
+        }))
+    }
+
+    const handleDeleteEducation = (id) => {
+        setCv((prevState) => {
+            const newEducation = prevState.education.filter(
+                (educationItem) => educationItem.id !== id
+            )
+            return { ...prevState, education: [...newEducation] }
+        })
     }
 
 
     return(
         <div>
-            <Create cv={emptyCV} onChangePersonal={handleChangePersonal}/>
-            <Render cv={emptyCV}/>
+            <Create
+                cv={cv}
+                onChangePersonal={handleChangePersonal}
+                onChangeEducation={handleChangeEducation}
+                onAddEducation={handleAddEducation}
+                onDeleteEducation={handleDeleteEducation}
+            />
+            <Render cv={cv}/>
         </div>
     )
 }

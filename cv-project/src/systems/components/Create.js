@@ -3,15 +3,20 @@ import Info from './form/Info';
 import Education from './form/Education';
 import Experience from './form/Experience';
 
-const Create = ({cv,onChangePersonal}) => {
-    cv.personalInfo.address = 'Something';
-
-
+const Create = ({cv,onChangePersonal,onDeleteEducation,onAddEducation,onChangeEducation}) => {
 
     return(
         <div>
-            <Info personalInfo = {cv.personalInfo} onChange={onChangePersonal}/>
-            <Education education ={cv.education}/>
+            <Info
+                personalInfo = {cv.personalInfo}
+                onChange={onChangePersonal}
+
+            />
+            <Education
+                education={cv.education}
+                onChange={onChangeEducation}
+                onAdd={onAddEducation}
+                onDelete={onDeleteEducation}/>
             <Experience exp ={cv.experience}/>
         </div>
     )
